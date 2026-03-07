@@ -1,0 +1,27 @@
+const prisma = require('../config/database');
+
+class EnrollmentService {
+  async enroll(userId, courseId) {
+    // Valida se usuário e curso existem
+    const user = await prisma.user.findUnique({ where: { id: parseInt(userId) } });
+    const course = await prisma.course.findUnique({ where: { id: parseInt(courseId) } });
+
+    if (!user || !course) throw new Error("Usuário ou Curso inexistente");
+
+    // O Prisma vai barrar a duplicidade automaticamente por causa do @@unique no schema,
+    // mas tratamos aqui para uma mensagem amigável.
+    try {
+      return await prisma.enrollment.create({
+        data: {
+          user_id: parseInt(userId),
+          course_id: parseInt(courseId)
+        }
+      });
+    } catch (error) {
+      if (error.code === 'P2002') throw new Error("Usuário já matriculado neste curso");
+      throw error;
+    }
+  }
+}
+
+module.exports = new EnrollmentService();
