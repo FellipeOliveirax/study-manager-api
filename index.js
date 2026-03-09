@@ -6,15 +6,12 @@ const EnrollmentService = require('./src/services/EnrollmentService');
 const app = express();
 app.use(express.json());
 
-// usar rotas de usuário
 app.use(userRoutes);
 
-// Helper de resposta
 const sendRes = (res, success, message, data = null, status = 200) => {
   return res.status(status).json({ success, message, data });
 };
 
-// Rotas de cursos
 app.post('/courses', async (req, res) => {
   try {
     const course = await CourseService.create(req.body);
@@ -24,7 +21,6 @@ app.post('/courses', async (req, res) => {
   }
 });
 
-// Rotas de matrícula
 app.post('/enrollments', async (req, res) => {
   try {
     const { user_id, course_id } = req.body;
