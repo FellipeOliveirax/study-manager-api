@@ -36,6 +36,6 @@ model Enrollment {
   user   User   @relation(fields: [user_id], references: [id])
   course Course @relation(fields: [course_id], references: [id])
 
-  @@unique([user_id, course_id]) // Garante que não haja matrícula duplicada
+  @@unique([user_id, course_id]) 
   @@map("enrollments")
 }
